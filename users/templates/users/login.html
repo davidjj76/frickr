@@ -8,12 +8,12 @@
     <p>{{ error }}</p>
 {% endfor %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div>
-        <button>Entrar</button>
-    </div>
-</form>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <button>Entrar</button>
+        </div>
+    </form>
 
 {% endblock %}
