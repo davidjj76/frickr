@@ -142,3 +142,8 @@ LOGGING = {
 
 # Login URL
 LOGIN_URL = '/login'
+
+LICENSES = (
+    ('QUE', 'Quentin Tarantino'),
+    ('DSH', 'Dr. Schultz'),
+)
