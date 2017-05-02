@@ -1,5 +1,28 @@
+from django.contrib.auth import login as django_login, logout as django_logout, authenticate
+from django.shortcuts import redirect, render
+
+
 def login(request):
-    pass
+    error_messages = list()
+    if request.method == 'POST':
+        username = request.POST.get('usr', '')
+        password = request.POST.get('pwd', '')
+        user = authenticate(username=username, password=password)
+        if user is None:
+            error_messages.append('Nombre de usuario o contraseña incorrecta')
+        else:
+            if user.is_active:
+                django_login(request, user)
+                return redirect('photos_home')
+            else:
+                error_messages.append('El usuario no está activo')
+
+    context = {
+        'errors': error_messages
+    }
+    return render(request, 'users/login.html', context)
 
 def logout(request):
-    pass
+    if request.user.is_authenticated:
+        django_logout(request)
+    return redirect('photos_home')
