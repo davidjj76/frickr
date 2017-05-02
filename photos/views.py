@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
@@ -26,6 +27,7 @@ def detail(request, pk):
         return HttpResponseNotFound('No existe la foto!!!')
 
 
+@login_required()
 def create(request):
     success_message = ''
     if request.method == 'GET':
