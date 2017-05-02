@@ -16,7 +16,7 @@ def home(request):
 
 
 def detail(request, pk):
-    possible_photos = Photo.objects.filter(pk=pk)
+    possible_photos = Photo.objects.filter(pk=pk).select_related('owner')
     photo = possible_photos[0] if len(possible_photos) == 1 else None
     if photo is not None:
         context = {
