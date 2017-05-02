@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'frikr',
     'photos.apps.PhotosConfig',
+    'users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [
