@@ -147,3 +147,5 @@ LICENSES = (
     ('QUE', 'Quentin Tarantino'),
     ('DSH', 'Dr. Schultz'),
 )
+
+PROJECT_BADWORDS = ['Mamon', 'Tonto']
