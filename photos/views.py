@@ -10,6 +10,18 @@ from photos.forms import PhotoForm
 from photos.models import Photo, PUBLIC
 
 
+class PhotosQueryset(object):
+
+    def get_photos_queryset(self, request):
+        if not request.user.is_authenticated():
+            photos = Photo.objects.filter(visibility=PUBLIC)
+        elif request.user.is_superuser:
+            photos = Photo.objects.all()
+        else:
+            photos = Photo.objects.filter(Q(owner=request.user) | Q(visibility=PUBLIC))
+        return photos
+
+
 class HomeView(View):
 
     def get(self, request):
@@ -20,10 +32,10 @@ class HomeView(View):
         return render(request, 'photos/home.html', context)
 
 
-class DetailView(View):
+class DetailView(View, PhotosQueryset):
 
     def get(self, request, pk):
-        possible_photos = Photo.objects.filter(pk=pk).select_related('owner')
+        possible_photos = self.get_photos_queryset(request).filter(pk=pk).select_related('owner')
         photo = possible_photos[0] if len(possible_photos) == 1 else None
         if photo is not None:
             context = {
@@ -65,16 +77,10 @@ class CreateView(View):
         return render(request, 'photos/new_photo.html', context)
 
 
-class ListView(View):
+class ListView(View, PhotosQueryset):
 
     def get(self, request):
-        if not request.user.is_authenticated():
-            photos = Photo.objects.filter(visibility=PUBLIC)
-        elif request.user.is_superuser:
-            photos = Photo.objects.all()
-        else:
-            photos = Photo.objects.filter(Q(owner=request.user) | Q(visibility=PUBLIC))
         context = {
-            'photos': photos,
+            'photos': self.get_photos_queryset(request),
         }
         return render(request, 'photos/list.html', context)
