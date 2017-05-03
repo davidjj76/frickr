@@ -2,17 +2,20 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
+from django.views import View
 
 from photos.forms import PhotoForm
 from photos.models import Photo, PUBLIC
 
 
-def home(request):
-    photos = Photo.objects.filter(visibility=PUBLIC).order_by('-created_at')
-    context = {
-        'photos_list': photos[:5],
-    }
-    return render(request, 'photos/home.html', context)
+class HomeView(View):
+
+    def get(self, request):
+        photos = Photo.objects.filter(visibility=PUBLIC).order_by('-created_at')
+        context = {
+            'photos_list': photos[:5],
+        }
+        return render(request, 'photos/home.html', context)
 
 
 def detail(request, pk):
