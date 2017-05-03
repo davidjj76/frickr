@@ -18,16 +18,18 @@ class HomeView(View):
         return render(request, 'photos/home.html', context)
 
 
-def detail(request, pk):
-    possible_photos = Photo.objects.filter(pk=pk).select_related('owner')
-    photo = possible_photos[0] if len(possible_photos) == 1 else None
-    if photo is not None:
-        context = {
-            'photo': photo
-        }
-        return render(request, 'photos/detail.html', context)
-    else:
-        return HttpResponseNotFound('No existe la foto!!!')
+class DetailView(View):
+
+    def get(self, request, pk):
+        possible_photos = Photo.objects.filter(pk=pk).select_related('owner')
+        photo = possible_photos[0] if len(possible_photos) == 1 else None
+        if photo is not None:
+            context = {
+                'photo': photo
+            }
+            return render(request, 'photos/detail.html', context)
+        else:
+            return HttpResponseNotFound('No existe la foto!!!')
 
 
 @login_required()
