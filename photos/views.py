@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
@@ -62,3 +63,18 @@ class CreateView(View):
             'success_message': success_message,
         }
         return render(request, 'photos/new_photo.html', context)
+
+
+class ListView(View):
+
+    def get(self, request):
+        if not request.user.is_authenticated():
+            photos = Photo.objects.filter(visibility=PUBLIC)
+        elif request.user.is_superuser:
+            photos = Photo.objects.all()
+        else:
+            photos = Photo.objects.filter(Q(owner=request.user) | Q(visibility=PUBLIC))
+        context = {
+            'photos': photos,
+        }
+        return render(request, 'photos/list.html', context)
