@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from photos.views import HomeView, detail, create
-from users.views import login, logout
+from users.views import LoginView, LogoutView
 
 urlpatterns = [
     # Admin
@@ -14,6 +14,6 @@ urlpatterns = [
     url(r'^photos/new$', create, name='photo_create'),
 
     # Users
-    url(r'^login$', login, name='users_login'),
-    url(r'^logout$', logout, name='users_logout'),
+    url(r'^login$', LoginView.as_view(), name='users_login'),
+    url(r'^logout$', LogoutView.as_view(), name='users_logout'),
 ]
