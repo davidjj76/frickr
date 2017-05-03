@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.contrib import admin
 
-from photos.views import HomeView, DetailView, create
+from photos.views import HomeView, DetailView, CreateView
 from users.views import LoginView, LogoutView
 
 urlpatterns = [
@@ -11,7 +11,7 @@ urlpatterns = [
     # Photos
     url(r'^$', HomeView.as_view(), name='photos_home'),
     url(r'^photos/(?P<pk>[0-9]+)$', DetailView.as_view(), name='photo_detail'),
-    url(r'^photos/new$', create, name='photo_create'),
+    url(r'^photos/new$', CreateView.as_view(), name='photo_create'),
 
     # Users
     url(r'^login$', LoginView.as_view(), name='users_login'),

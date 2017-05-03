@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 
 from photos.forms import PhotoForm
@@ -32,12 +33,21 @@ class DetailView(View):
             return HttpResponseNotFound('No existe la foto!!!')
 
 
-@login_required()
-def create(request):
-    success_message = ''
-    if request.method == 'GET':
+class CreateView(View):
+
+    @method_decorator(login_required())
+    def get(self, request):
         form = PhotoForm()
-    else:
+        context = {
+            'form': form,
+            'success_message': '',
+        }
+        return render(request, 'photos/new_photo.html', context)
+
+
+    @method_decorator(login_required())
+    def post(self, request):
+        success_message = ''
         photo_with_owner = Photo(owner=request.user)
         form = PhotoForm(request.POST, instance=photo_with_owner)
         if form.is_valid():
@@ -47,8 +57,8 @@ def create(request):
             success_message += '<a href="{0}">'.format(reverse('photo_detail', args=[new_photo.pk]))
             success_message += 'Ver foto'
             success_message += '</a>'
-    context = {
-        'form': form,
-        'success_message': success_message,
-    }
-    return render(request, 'photos/new_photo.html', context)
+        context = {
+            'form': form,
+            'success_message': success_message,
+        }
+        return render(request, 'photos/new_photo.html', context)
