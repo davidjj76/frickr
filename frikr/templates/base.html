@@ -17,7 +17,7 @@
             |
             <a href="{% url 'photo_create' %}">Crear foto</a>
             |
-            <a href="{% url 'users_logout' %}">Salir</a>
+            <a href="{% url 'users_logout' %}">Salir ({{ request.user.username }})</a>
         {% else %}
             <a href="{% url 'users_login' %}">Entrar</a>
         {% endif %}
