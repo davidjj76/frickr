@@ -7,7 +7,8 @@ class UserSerializer(serializers.Serializer):
     id = serializers.ReadOnlyField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    username = serializers.EmailField()
+    username = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField()
 
     def create(self, validated_data):
@@ -28,3 +29,9 @@ class UserSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+    def validate_username(self, data):
+        users = User.objects.filter(username=data)
+        if len(users) != 0:
+            raise serializers.ValidationError('Ya existe un usuario con ese username')
+        else:
+            return data
